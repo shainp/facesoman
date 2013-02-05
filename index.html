@@ -17,6 +17,30 @@
 <link rel="stylesheet" type="text/css" media="all" href="css/960.css" />
 <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
 <script src="http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js"></script>
+<script type="text/javascript" src="js/shadowbox.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="css/shadowbox.css" />
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+
+Shadowbox.init({
+    skipSetup: true
+});
+
+$('.reader_link').live('click',function() {
+    Shadowbox.open({
+        content:    '<div id="welcome-msg">Welcome to my website!</div>',
+        player:     "html",
+        height:     350,
+        width:      350
+    });
+});
+
+function check_login(){
+	
+}
+</script>
 </head> 
 <body> 
  
@@ -37,7 +61,7 @@
 	<div class="grid_12" id="top-half"> 
 		<div class="grid_4 alpha"> 
 			<h2>Latest Edition</h2> 
-			<a href="reader.html"><img src="images/cover.jpg" alt="November Cover Page"/></a></div> 
+			<a href="javascript:void(0);" class="reader_link"><img src="images/cover.jpg" alt="November Cover Page"/></a></div> 
 	
 		<div class="grid_4" id="latest_articles"> 
                         <h2>The Latest</h2>
