@@ -20,7 +20,128 @@
 <script type="text/javascript" src="js/shadowbox.js"></script>
 <link rel="stylesheet" type="text/css" media="all" href="css/shadowbox.css" />
 <style type="text/css">
+/*-- signin form --*/
+#signin {
+	background: url(../images/signin_bg.png) no-repeat 0 0;
+	width: 218px;
+	height: 190px;
+	padding-top: 50px;
+	overflow: hidden;
+	float: right;
+	/*margin-top:50px;*/
+}
 
+	#signin fieldset {
+		padding: 0;
+		margin: 0;
+		border: 0;
+	}
+	
+		#signin legend {
+			display: none;
+		}
+
+	#signin div {
+		background: url(../images/rounded_field.gif) no-repeat 0 0;
+		padding: 3px 0 10px 0;
+		height: 18px;
+		width: 190px;
+		margin: 0 auto;
+	}
+	
+		#signin p {
+			border: 0;
+			padding: 0;
+		}
+	
+		#signin .buttons {
+			padding-left: 14px;
+			padding-top: 2px;
+			padding-bottom: 0;
+			width: 100%;
+			overflow: hidden;
+		}
+	
+		#signin label {
+			float: left;
+			font-size: 11px;
+			width: 65px;
+			display: block;
+			color: #656565;
+			font-weight: normal;
+			text-align: left;
+			padding: 0 0 0 5px;
+			line-height: 18px;
+		}
+		
+		#signin input#email,
+		#signin input#password {
+			font-family: "Lucida Sans Unicode", "Lucida Grande", Helvetica, Arial, sans-serif;
+			border: 0;
+			background: none;
+			width: 113px;
+			float: left;
+			padding: 1px 0 0 0;
+			font-size: 12px;
+			line-height: 20px;
+		}
+		
+		#signin input#password { font-weight: bold }
+		
+	#signin .signin_button {
+		display: block;
+		width: 95px;
+		height: 27px;
+		text-indent: -9999px;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+		margin-left: 95px;
+	}
+	
+		#signin #signin_button {
+			background: url(../images/button_signin.gif) no-repeat 0 0;
+		}
+	
+		#signin #register_button {
+			background: url(../images/button_register.gif) no-repeat 0 0;
+			margin-left:1px;
+		}
+
+		#forgot {
+			font-size: 11px;
+			color: #656565;
+			text-align:center;
+			display: block;
+			clear: both;
+			margin-top:6px;
+		}
+		
+			#forgot a {
+				color: #555!important;
+				text-decoration: underline;
+				padding: 0;
+			}
+
+			#grass #forgot a {
+				padding: 0 1px 0 0;
+			}
+
+		#register {
+			font-size: 12px;
+			color: #656565;
+			text-align:center;
+			display: block;
+			clear: both;
+			margin-top:14px;
+			line-height: 16px;
+		}
+		
+			#register a {
+				color: #008576!important;
+				text-decoration: underline;
+				padding: 0;
+			}
 </style>
 <script type="text/javascript">
 
@@ -28,18 +149,34 @@ Shadowbox.init({
     skipSetup: true
 });
 
-$('.reader_link').live('click',function() {
-    Shadowbox.open({
-        content:    '<div id="welcome-msg">Welcome to my website!</div>',
-        player:     "html",
-        height:     350,
-        width:      350
-    });
+$('#signin_button').live('click', function(e){
+	e.preventDefault();
+	var email = $('#email').val();
+	var password = $('#password').val();	
+	$.post("actions/actions.php?action=login&email="+ email +"&password="+ password,function(data){
+		if (data == 1)
+			window.location='reader.html';
+		else
+			alert('Incorrect Password!');
+	});
 });
 
-function check_login(){
-	
-}
+$('.reader_link').live('click',function() {
+	var logged_in = 0;
+	$.post("actions/actions.php?action=check_login",function(data){
+		logged_in = data;
+		if(logged_in != 1) {
+			Shadowbox.open({
+				content:    '<div id="signin"><form name="login" method="post" action="" id="login_form"><fieldset><legend>Sign in</legend><div><label for="email">Email:</label><input type="text" name="email" id="email"></div><div><label for="password">Password:</label><input type="password" maxlength="15" name="password" id="password"></div><p class="buttons"><button class="signin_button" type="submit" id="signin_button">Sign in</button></p><p id="register"><br /><a id="register_user" href="javascript:void(0);">Register now</a></p></fieldset></form></div>',
+				player:     "html",
+				height:     240,
+				width:      218
+			});
+		} else {
+			window.location='reader.html';
+		}
+	});
+});
 </script>
 </head> 
 <body> 
