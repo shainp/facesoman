@@ -101,38 +101,63 @@
 	
 	function user_approve(){
 		$email = $_REQUEST['email'];
-		if (!$email)
-			return 0; //no email
-		else {
+		$ID = $_REQUEST['ID'];
+		if ($email) {
 			$check = mysql_query("SELECT * FROM `users` WHERE `email`='$email' AND `approved`='1'");
 			if (mysql_num_rows($check)==1)
 				return 0; //already approved
 			else {
-				mysql_query("UPDATE `users` SET `approved`='1' WHERE email='$email'");
+				mysql_query("UPDATE `users` SET `approved`='1' WHERE `email`='$email'");
 				if(mysql_affected_rows() == 1)
 					return 1;
 				else
 					return 0;
 			}
 		}
+		else if($ID){
+			$check = mysql_query("SELECT * FROM `users` WHERE `ID`='$ID' AND `approved`='1'");
+			if (mysql_num_rows($check)==1)
+				return 0; //already approved
+			else {
+				mysql_query("UPDATE `users` SET `approved`='1' WHERE `ID`='$ID'");
+				if(mysql_affected_rows() == 1)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else
+			return 0;
 	}
 	
 	function user_reject(){
 		$email = $_REQUEST['email'];
-		if (!$email)
-			return 0; //no email
-		else {
+		if ($email) {
 			$check = mysql_query("SELECT * FROM `users` WHERE `email`='$email' AND `approved`='0'");
 			if (mysql_num_rows($check)==1)
 				return 0; //already rejected
 			else {
-				mysql_query("UPDATE `users` SET `approved`='-1' WHERE email='$email'");
+				mysql_query("UPDATE `users` SET `approved`='-1' WHERE `email`='$email'");
 				if(mysql_affected_rows() == 1)
 					return 1;
 				else
 					return 0;
 			}
 		}
+		else if($ID) {
+			$check = mysql_query("SELECT * FROM `users` WHERE `ID`='$ID' AND `approved`='0'");
+			if (mysql_num_rows($check)==1)
+				return 0; //already rejected
+			else {
+				mysql_query("UPDATE `users` SET `approved`='-1' WHERE `ID`='$ID'");
+				if(mysql_affected_rows() == 1)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else
+			return 0;
 	}
 	
 	function logout(){
