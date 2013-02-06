@@ -149,6 +149,7 @@ Shadowbox.init({
     skipSetup: true
 });
 
+
 $('#signin_button').live('click', function(e){
 	e.preventDefault();
 	var email = $('#email').val();
@@ -167,7 +168,7 @@ $('.reader_link').live('click',function() {
 		logged_in = data;
 		if(logged_in != 1) {
 			Shadowbox.open({
-				content:    '<div id="signin"><form name="login" method="post" action="" id="login_form"><fieldset><legend>Sign in</legend><div><label for="email">Email:</label><input type="text" name="email" id="email"></div><div><label for="password">Password:</label><input type="password" maxlength="15" name="password" id="password"></div><p class="buttons"><button class="signin_button" type="submit" id="signin_button">Sign in</button></p><p id="register"><br /><a id="register_user" href="javascript:void(0);">Register now</a></p></fieldset></form></div>',
+				content:    '<div id="signin"><form name="login" method="post" action="" id="login_form"><fieldset><legend>Sign in</legend><div><label for="email">Email:</label><input type="text" name="email" id="email"></div><div><label for="password">Password:</label><input type="password" maxlength="15" name="password" id="password"></div><p class="buttons"><button class="signin_button" type="submit" id="signin_button">Sign in</button></p><p id="register"><br /><a id="register_user" href="register.html">Register now</a></p></fieldset></form></div>',
 				player:     "html",
 				height:     240,
 				width:      218

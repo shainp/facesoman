@@ -28,13 +28,11 @@
 		
 		if (!$password||!$email||!$phone||!$f_name||!$company)
 		return 0; //not all fields input
-		//return 'Not all fields filled';
 		else {
 			$password = md5($password);
 			$check = mysql_query("SELECT * FROM `users` WHERE `email`='$email'");
 			if (mysql_num_rows($check)>=1)
 				return 0; //email already registered.
-				//return 'email already registered.';
 			else {
 				$email_activation_code = rand(11111111,99999999);
 				$to = $email;
@@ -43,7 +41,6 @@
 				if (!mail($to,$subject,$body,$headers))
 					return 0; //unable to send email.
 				else {
-					//register into database
 					mysql_query("INSERT INTO `users` VALUES ('','$email','$password','$f_name','$l_name','$phone','$company','$email_activation_code','0','0')");
 					if(mysql_affected_rows() == 1)
 						return 1;
