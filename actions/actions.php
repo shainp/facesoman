@@ -1,11 +1,6 @@
 <?php
 
-
-	$mysql_hostname = 'localhost';
-	$mysql_database = 'facesoman_users';
-	$mysql_username = 'facesoman_user';
-	$mysql_password = 'facesoman_pass';
-	
+	include('database.inc');
 	
 	mysql_connect($mysql_hostname, $mysql_username, $mysql_password) or die(mysql_error());
 	mysql_select_db($mysql_database) or die($error);

@@ -21,10 +21,11 @@
     $sTable = "users";
      
     /* Database connection information */
-    $gaSql['user']       = "facesoman_user";
-    $gaSql['password']   = "facesoman_pass";
-    $gaSql['db']         = "facesoman_users";
-    $gaSql['server']     = "localhost";
+	include('database.inc');
+    $gaSql['user']       = $mysql_username;
+    $gaSql['password']   = $mysql_password;
+    $gaSql['db']         = $mysql_database;
+    $gaSql['server']     = $mysql_hostname;
      
      
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
