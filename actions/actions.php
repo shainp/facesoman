@@ -1,5 +1,8 @@
 <?php
 
+	ob_start();
+	session_start();
+
 	include('database.inc');
 	
 	mysql_connect($mysql_hostname, $mysql_username, $mysql_password) or die(mysql_error());
@@ -104,9 +107,6 @@
 		header("Expires: 0");
 		print "$data";
 	}
-	
-	ob_start();
-	session_start();
 	
 	function check_login(){
 		if (isset($_SESSION['email']))
