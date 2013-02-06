@@ -149,11 +149,11 @@
 		$email = addslashes(strip_tags($_REQUEST['email']));
 		$password = addslashes(strip_tags($_REQUEST['password']));
 		if (!$email||!$password)
-			return 0; //not all filds input
+			return 'Please enter the email address and password to login.'; //not all filds input
 		else {
 			$login = mysql_query("SELECT * FROM users WHERE email='$email'");
 			if (mysql_num_rows($login)==0)
-				return 0; //user does not exist
+				return 'The email address entered does not exist in our database. Please proceed to registration.'; //user does not exist
 			else {
 				while ($login_row = mysql_fetch_assoc($login)) {
 					$password_db = $login_row['password'];
