@@ -1,6 +1,5 @@
 <?php
-	ob_start();
-	session_start();
+
 
 	$mysql_hostname = 'localhost';
 	$mysql_database = 'facesoman_users';
@@ -10,6 +9,109 @@
 	
 	mysql_connect($mysql_hostname, $mysql_username, $mysql_password) or die(mysql_error());
 	mysql_select_db($mysql_database) or die($error);
+	
+	switch($_REQUEST['action']) {
+		case 'user_approve':
+			echo user_approve();
+			break;
+		case 'user_reject':
+			echo user_reject();
+			break;
+		case 'login':
+			echo login();
+			break;
+		case 'logout':
+			echo logout();
+			break;
+		case 'check_login':
+			echo check_login();
+			break;
+		case 'register':
+			echo register();
+			break;
+		case 'email_activate':
+			echo email_activate();
+			break;
+		case 'download_db':
+			echo download_db();
+			break;
+		case 'download_email_list':
+			echo download_email_list();
+			break;
+		default:
+			echo 'Invalid Action';
+	}
+	
+	function download_db(){
+		$select = "SELECT * FROM `users`";
+		$export = mysql_query ( $select ) or die ( "Sql error : " . mysql_error( ) );
+		$fields = mysql_num_fields ( $export );
+
+		for ( $i = 0; $i < $fields; $i++ )
+		{
+		    $header .= mysql_field_name( $export , $i ) . "\t";
+		}
+
+		while( $row = mysql_fetch_row( $export ) )
+		{
+		    $line = '';
+		    foreach( $row as $value )
+		    {                                            
+		        if ( ( !isset( $value ) ) || ( $value == "" ) )
+		        {
+		            $value = "\t";
+		        }
+		        else
+		        {
+		            $value = str_replace( '"' , '""' , $value );
+		            $value = '"' . $value . '"' . "\t";
+		        }
+		        $line .= $value;
+		    }
+		    $data .= trim( $line ) . "\n";
+		}
+		$data = str_replace( "\r" , "" , $data );
+
+		if ( $data == "" )
+		{
+		    $data = "\n(0) Records Found!\n";                        
+		}
+
+		header("Content-type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=database.xls");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		print "$header\n$data";
+	}
+	
+	function download_email_list(){
+		$select = "SELECT `email` FROM `users` WHERE `approved` = 1";
+		$export = mysql_query ( $select );
+		$fields = mysql_num_fields ( $export );
+		
+		while( $row = mysql_fetch_row( $export ) )
+		{
+		    $line = '';
+		    foreach( $row as $value )                                         
+		        $line .= $value;
+		    $data .= trim( $line ) . "\n";
+		}
+		$data = str_replace( "\r" , "" , $data );
+
+		if ( $data == "" )
+		{
+		    $data = "\n(0) Records Found!\n";                        
+		}
+
+		header("Content-type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=email_list.csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		print "$data";
+	}
+	
+	ob_start();
+	session_start();
 	
 	function check_login(){
 		if (isset($_SESSION['email']))
@@ -132,8 +234,9 @@
 	
 	function user_reject(){
 		$email = $_REQUEST['email'];
+		$ID = $_REQUEST['ID'];
 		if ($email) {
-			$check = mysql_query("SELECT * FROM `users` WHERE `email`='$email' AND `approved`='0'");
+			$check = mysql_query("SELECT * FROM `users` WHERE `email`='$email' AND `approved` = -1");
 			if (mysql_num_rows($check)==1)
 				return 0; //already rejected
 			else {
@@ -145,7 +248,7 @@
 			}
 		}
 		else if($ID) {
-			$check = mysql_query("SELECT * FROM `users` WHERE `ID`='$ID' AND `approved`='0'");
+			$check = mysql_query("SELECT * FROM `users` WHERE `ID`='$ID' AND `approved` = -1");
 			if (mysql_num_rows($check)==1)
 				return 0; //already rejected
 			else {
@@ -181,31 +284,5 @@
 			return 1;
 		else
 			return 0;
-	}
-	
-	switch($_REQUEST['action']) {
-		case 'user_approve':
-			echo user_approve();
-			break;
-		case 'user_reject':
-			echo user_reject();
-			break;
-		case 'login':
-			echo login();
-			break;
-		case 'logout':
-			echo logout();
-			break;
-		case 'check_login':
-			echo check_login();
-			break;
-		case 'register':
-			echo register();
-			break;
-		case 'email_activate':
-			echo email_activate();
-			break;
-		default:
-			echo 'Invalid Action';
 	}
 ?>
