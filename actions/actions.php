@@ -124,16 +124,16 @@
 		$password = addslashes(strip_tags($_REQUEST['password']));
 		
 		if (!$password||!$email||!$phone||!$f_name||!$company)
-		return 0; //not all fields input
+		return 'Please enter all necessary fields to proceed with registration'; //not all fields input
 		else {
 			$password = md5($password);
 			$check = mysql_query("SELECT * FROM `users` WHERE `email`='$email'");
 			if (mysql_num_rows($check)>=1)
-				return 0; //email already registered.
+				return 'The email address entered has already been registered. Please proceed to the login page.'; //email already registered.
 			else {
 				$email_activation_code = rand(11111111,99999999);
 				if(!email_activation_code($username, $email, $email_activation_code))
-					return 0; //unable to send email.
+					return 'We are unable to process your registration now. Please try later.'; //unable to send email.
 				else {
 					mysql_query("INSERT INTO `users` VALUES ('','$email','$password','$f_name','$l_name','$phone','$company','$email_activation_code','0','0')");
 					if(mysql_affected_rows() == 1){
