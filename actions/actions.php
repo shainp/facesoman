@@ -164,15 +164,15 @@
 					$password_db = $login_row['password'];
 					$password = md5($password);
 					if ($password!=$password_db)
-						return 0; //Incorrect password
+						return 'You have entered an incorrect password. Please try again.'; //Incorrect password
 					else {
 						$email_verified = $login_row['email_verified'];
 						$approved = $login_row['approved'];
 						$email = $login_row['email'];
 						if ($email_verified==0)
-							return 0; //email activation pending
+							return 'Please verify your email address before proceeding.'; //email activation pending
 						else if ($approved==0)
-							return 0; //moderator approval pending
+							return 'Awaiting moderator approval of your account. Please try later.'; //moderator approval pending
 						else {
 							$_SESSION['email']=$email;
 							return 1;
