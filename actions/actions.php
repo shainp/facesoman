@@ -141,9 +141,10 @@
 					return 0; //unable to send email.
 				else {
 					mysql_query("INSERT INTO `users` VALUES ('','$email','$password','$f_name','$l_name','$phone','$company','$email_activation_code','0','0')");
-					if(mysql_affected_rows() == 1)
+					if(mysql_affected_rows() == 1){
+						notify_administrator($email);
 						return 1;
-					notify_administrator($email);
+					}
 				}
 			}
 		}
@@ -271,16 +272,16 @@
 	function email_activation_code($username, $email, $email_activation_code){
 		$subject = "Activate your account";
 		$body = "Hello $username,\n\nYou registered and need to activate your account. Click the link below or paste it into the URL bar of your browser\n\nhttp://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=email_activate&email_activation_code=$email_activation_code\n\nThanks!";
-		if (!mail($email,$subject,$body))
+		if (mail($email,$subject,$body))
 			return 1;
 		else
 			return 0;
 	}
-	function notify_administrator($user_email){
+	function notify_administrator($email){
 		$subject = "New User Registered";
-		$admin_email = 'admin@facesoman.com';
-		$body = "A new user with the email address $email has completed registration and is waiting approval. Click the link below or paste it into the URL bar of your browser to activate user account.\n\nhttp://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=user_approve&email=$email\n\nClick here to login to the administrator control panel: http://".$_SERVER["SERVER_NAME"]."/administrator\n\nThanks!";
-		if (!mail($admin_email,$subject,$body))
+		$admin_email = 'shain@shain.me';
+		$body = "A new user with the email address $email has completed registration and is waiting approval. Click the link below or paste it into the URL bar of your browser to activate user account.\n\nhttp://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=user_approve&email=$email\n\nClick here to login to the administrator control panel: http://".$_SERVER["SERVER_NAME"]."/administrator.php\n\nThanks!";
+		if (mail($admin_email,$subject,$body))
 			return 1;
 		else
 			return 0;
