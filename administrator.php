@@ -1,3 +1,33 @@
+<?php
+	session_start();
+	include('actions/database.inc');
+	mysql_connect($mysql_hostname, $mysql_username, $mysql_password) or die(mysql_error());
+	mysql_select_db($mysql_database) or die($error);
+	
+	if (!isset($_SESSION['administrator']) && !isset($_POST['password'])){
+		echo '<html><head><title>Administrator Login</title></head><body style="font-family:Arial;"><div style="width:200px; height:200px; margin:100px auto;"><form method="post" action=""><fieldset><legend>Administrator Login</legend><label>Username:<input type="text" name="user"/></label><br /><br /><label>Password:<input type="password" name="password"/></label><br /><br /><input type="submit" value="Login" name="submit"/></fieldset></form></div> <script type="text/javascript"> var error_msg = "';
+		if(isset($_POST['password'])){
+			$password = addslashes(strip_tags($_REQUEST['password']));
+			$login = mysql_query("SELECT * FROM `admin` WHERE `user`='admin'");
+			if (mysql_num_rows($login)==0){
+				echo 'The user entered does not exist in our database.'; //user does not exist
+			} else {
+				while ($login_row = mysql_fetch_assoc($login)) {
+					$password_db = $login_row['password'];
+					$password = md5($password);
+					if ($password!=$password_db){
+						echo 'You have entered an incorrect password. Please try again.'; //Incorrect password
+					} else
+						$_SESSION['administrator']='admin';
+				}
+			}
+			goto goto_admin;
+		}
+		echo '"; if(error_msg) alert(error_msg);</script></body></html>';
+		exit(0);
+		goto_admin:
+	}
+?>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
 <title>FACES Magazine Oman</title> 
 <META name="keywords" content="Magazine, Oman, Faces, Centrepoint, Driving, Fashion, Movies, Muscat, Sultanate, Oman, Games, Gossips, Celebrity, Sultan, Salalah, FacesOman, OmanFaces, emagazine, Home, health, Oman news, Oman jobs, Oman Numbers">
