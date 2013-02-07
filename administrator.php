@@ -117,10 +117,12 @@ function approve(user_id){
 	});
 }
 function reject(user_id){
-	$.post("actions/actions.php?action=user_reject&ID="+ user_id,function(data){
-		if (data == 1)
-			oTable.fnReloadAjax();
-	});
+	if (confirm("Are you sure you want to reject this user?")){
+		$.post("actions/actions.php?action=user_reject&ID="+ user_id,function(data){
+			if (data == 1)
+				oTable.fnReloadAjax();
+		});
+	}
 }
 </script>
 <style type="text/css">	
