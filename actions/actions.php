@@ -4,6 +4,7 @@
 	session_start();
 
 	include('database.inc');
+	require_once('class.phpmailer.php');
 	
 	mysql_connect($mysql_hostname, $mysql_username, $mysql_password) or die(mysql_error());
 	mysql_select_db($mysql_database) or die($error);
@@ -132,12 +133,12 @@
 				return 'The email address entered has already been registered. Please proceed to the login page.'; //email already registered.
 			else {
 				$email_activation_code = rand(11111111,99999999);
-				if(!email_activation_code($username, $email, $email_activation_code))
+				if(!email_activation_code($f_name, $email, $email_activation_code))
 					return 'We are unable to process your registration now. Please try later.'; //unable to send email.
 				else {
 					mysql_query("INSERT INTO `users` VALUES ('','$email','$password','$f_name','$l_name','$phone','$company','$email_activation_code','0','0')");
 					if(mysql_affected_rows() == 1){
-						notify_administrator($email);
+						notify_administrator($email, $f_name);
 						return 1;
 					}
 				}
@@ -264,21 +265,30 @@
 		return 1;
 	}
 	
-	function email_activation_code($username, $email, $email_activation_code){
-		$subject = "Activate your account";
-		$body = "Hello $username,\n\nYou registered and need to activate your account. Click the link below or paste it into the URL bar of your browser\n\nhttp://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=email_activate&email_activation_code=$email_activation_code\n\nThanks!";
-		if (mail($email,$subject,$body))
+	function email_activation_code($f_name, $email, $email_activation_code){
+		$mail = new PHPMailer();
+		$mail->SetFrom('emag@facesoman.com', 'Faces Emagazine');
+		$mail->AddReplyTo('emag@facesoman.com', 'Faces Emagazine');
+		$mail->AddAddress($email, $f_name);
+		$mail->subject = "Activate your FacesOman.com account";
+		$mail->AltBody = "Hi $f_name,\n\nThanks for registering for the FACES online e-mag. To ensure that you are not a bot and real person, you need to click the link below or paste it into the URL bar of your browser.\n\nhttp://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=email_activate&email_activation_code=$email_activation_code\n\nThanks!\n\nTeam Faces.";
+		$mail->MsgHTML("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> <html xmlns=\"http://www.w3.org/1999/xhtml\"> <head> <style type=\"text/css\"> /*<![CDATA[*/ #outlook a{padding:0;} body{width:100% !important;} .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} body{-webkit-text-size-adjust:none;} body{margin:0; padding:0;} img{border:0; height:auto; line-height:100%; outline:none; text-decoration:none;} table td{border-collapse:collapse;} #backgroundTable{height:100% !important; margin:0; padding:0; width:100% !important;} body, table, td, a{ font-family: \"calibri\", Garamond, 'Comic Sans';} /*]]>*/ </style> </head> <body leftmargin=\"0\" marginwidth=\"0\" topmargin=\"0\" marginheight=\"0\" offset=\"0\"> <center> <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" height=\"100%\" width=\"100%\" id=\"backgroundTable\"> <tr> <td>Hi $f_name,<br /><br />Thanks for registering for the FACES online e-mag. To ensure that you are not a bot and real person, you need to click the link below or paste it into the URL bar of your browser.<br /><br />http://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=email_activate&email_activation_code=$email_activation_code<br /><br />Thanks!<br /><br />Team Faces.</td> </tr> </table> </center> </body> </html>");
+		if ($mail->Send())
 			return 1;
 		else
 			return 0;
 	}
-	function notify_administrator($email){
-		$query = mysql_query("SELECT * FROM `options` WHERE `option`='admin_email'");
-		$query_row = mysql_fetch_assoc($query);
-		$subject = " **Alert** $email Registered online.";
-		$admin_email = $query_row['value'];
-		$body = "A new user with the email address $email has completed registration and is waiting approval. Click the link below or paste it into the URL bar of your browser to activate user account.\n\nhttp://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=user_approve&email=$email\n\nClick here to login to the administrator control panel: http://".$_SERVER["SERVER_NAME"]."/administrator.php\n\nThanks!";
-		if (mail($admin_email,$subject,$body))
+	function notify_administrator($email, $f_name){
+		$mail = new PHPMailer();
+		$mail->SetFrom('emag@facesoman.com', 'Faces Emagazine');
+		$mail->AddReplyTo('emag@facesoman.com', 'Faces Emagazine');
+		$mail->AddAddress('director@facesoman.com', "Faces Emagazine Administrator");
+		$mail->AddCC('emag@facesoman.com, Faces Magazine');
+		$mail->AddBCC('roshan@goincubix.com', 'Roshan Kolar');
+		$mail->Subject = "**Alert** $f_name ($email) just registered on FacesOman.com";
+		$mail->AltBody = "Hi Admin,\n\nA new user with the email address $email has completed registration and is waiting approval. Click the link below or paste it into the URL bar of your browser to activate user account.\n\nhttp://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=user_approve&email=$email\n\nClick here to login to the administrator control panel: http://".$_SERVER["SERVER_NAME"]."/administrator.php\n\nThanks!";
+		$mail->MsgHTML("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> <html xmlns=\"http://www.w3.org/1999/xhtml\"> <head> <style type=\"text/css\"> /*<![CDATA[*/ #outlook a{padding:0;} body{width:100% !important;} .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} body{-webkit-text-size-adjust:none;} body{margin:0; padding:0;} img{border:0; height:auto; line-height:100%; outline:none; text-decoration:none;} table td{border-collapse:collapse;} #backgroundTable{height:100% !important; margin:0; padding:0; width:100% !important;} body, table, td, a{ font-family: \"calibri\", Garamond, 'Comic Sans';} /*]]>*/ </style> </head> <body leftmargin=\"0\" marginwidth=\"0\" topmargin=\"0\" marginheight=\"0\" offset=\"0\"> <center> <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" height=\"100%\" width=\"100%\" id=\"backgroundTable\"> <tr> <td>Hi Admin,<br /><br />A new user with the email address $email has completed registration and is waiting approval. Click the link below or paste it into the URL bar of your browser to activate user account.<br /><br /><a href=\"http://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=user_approve&email=$email\">http://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=user_approve&email=$email</a><br /><br />Click here to login to the administrator control panel: <a href=\"http://".$_SERVER["SERVER_NAME"]."/administrator.php\">http://".$_SERVER["SERVER_NAME"]."/administrator.php</a><br /><br />Thanks!</td> </tr> </table> </center> </body> </html>");
+		if ($mail->Send())
 			return 1;
 		else
 			return 0;
