@@ -191,7 +191,7 @@
 			else {
 				mysql_query("UPDATE `users` SET `email_verified`='1' WHERE `email_activation_code`='$email_activation_code'");
 				if(mysql_affected_rows() == 1)
-					return '<HTML><HEAD><META HTTP-EQUIV="refresh" CONTENT="3;URL=../index.html"> </HEAD> <BODY> <h3>Your email address has been verified. Please wait for moderator approval to activate account.</h3> You will be automatically redirected to the home page in 3 seconds. If you aren\'t redirected, <a href="../index.html"> click here</a>. </BODY> </HTML>';
+					return '<HTML><HEAD><META HTTP-EQUIV="refresh" CONTENT="3;URL=../index.html"> </HEAD> <BODY> <h2>Your email address has been verified. Please wait for moderator approval to activate account.</h2> <strong>You will be automatically redirected to the home page in 3 seconds. If you aren\'t redirected, <a href="../index.html"> click here</a>.</strong> </BODY> </HTML>';
 				else
 					return 0;
 			}
@@ -208,7 +208,7 @@
 			else {
 				mysql_query("UPDATE `users` SET `approved`='1' WHERE `email`='$email'");
 				if(mysql_affected_rows() == 1)
-					return '<HTML><HEAD><META HTTP-EQUIV="refresh" CONTENT="3;URL=../index.html"> </HEAD> <BODY> <h3>The user account has now been activated.</h3> You will be automatically redirected to the home page in 3 seconds. If you aren\'t redirected, <a href="../index.html"> click here</a>. </BODY> </HTML>';
+					return '<HTML><HEAD><META HTTP-EQUIV="refresh" CONTENT="3;URL=../index.html"> </HEAD> <BODY> <h2>The user account has now been activated.</h2> <strong>You will be automatically redirected to the home page in 3 seconds. If you aren\'t redirected, <a href="../index.html"> click here</a>.</strong> </BODY> </HTML>';
 				else
 					return 0;
 			}
