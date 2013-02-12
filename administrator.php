@@ -7,9 +7,9 @@
 	if (!isset($_SESSION['administrator'])){
 		if(isset($_POST['password'])){
 			$password = addslashes(strip_tags($_REQUEST['password']));
-			$login = mysql_query("SELECT * FROM `admin` WHERE `user`='admin'");
+			$login = mysql_query("SELECT * FROM `options` WHERE `option`='admin_password'");
 			while ($login_row = mysql_fetch_assoc($login)) {
-				$password_db = $login_row['password'];
+				$password_db = $login_row['value'];
 				$password = md5($password);
 				if ($password!=$password_db){
 					$error_message = 'You have entered an incorrect password. Please try again.'; //Incorrect password
