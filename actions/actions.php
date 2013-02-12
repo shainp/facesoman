@@ -273,8 +273,10 @@
 			return 0;
 	}
 	function notify_administrator($email){
+		$query = mysql_query("SELECT * FROM `options` WHERE `option`='admin_email'");
+		$query_row = mysql_fetch_assoc($query);
 		$subject = " **Alert** $email Registered online.";
-		$admin_email = 'shain@shain.me';
+		$admin_email = $query_row['value'];
 		$body = "A new user with the email address $email has completed registration and is waiting approval. Click the link below or paste it into the URL bar of your browser to activate user account.\n\nhttp://".$_SERVER["SERVER_NAME"]."/actions/actions.php?action=user_approve&email=$email\n\nClick here to login to the administrator control panel: http://".$_SERVER["SERVER_NAME"]."/administrator.php\n\nThanks!";
 		if (mail($admin_email,$subject,$body))
 			return 1;

@@ -11,3 +11,18 @@ CREATE TABLE `users`(
 	`approved` TINYINT(1) NOT NULL,
 	PRIMARY KEY(ID)
 );
+
+CREATE TABLE `admin` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(64) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  PRIMARY KEY (`ID`)
+);
+
+CREATE TABLE `options` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `option` varchar(128) NOT NULL,
+  `value` varchar(128) NOT NULL,
+  PRIMARY KEY (`ID`)
+);
+
